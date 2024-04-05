@@ -1,28 +1,29 @@
 # Load testing with Artillery
 
-This repository hosts a demo application with login functionality, specifically designed to showcase load testing using Artillery.
+This repository hosts a demo application with login functionality, specifically
+designed to demonstrate load testing using Artillery.
 
-**Tutorial**: [Link to corresponding BetterStack tutorial]()
+**Tutorial**:
+[Load Testing with Artillery: A Beginner's Guide](https://betterstack.com/community/guides/scaling-nodejs/artillery-intro/).
 
 ![Demo App Screenshot](screenshot.png)
 
 ## 🟢 Prerequisites
 
-- Basic JavaScript knowledge.
-- A working [Node.js environement](https://nodejs.org/en/download).
+- A working [Node.js environment](https://nodejs.org/en/download).
 
 ## 📦 Getting started
 
 - Clone this repo to your machine:
 
 ```bash
-git clone https://github.com/<your_username>/playwright-signup-login
+git clone https://github.com/betterstack-community/artillery-auth-app.git
 ```
 
 - Install the dependencies:
 
 ```bash
-cd playwright-signup-login && npm install
+cd artillery-auth-app && npm install
 ```
 
 - Start the development server:
@@ -31,9 +32,9 @@ cd playwright-signup-login && npm install
 npm start
 ```
 
-- You can see the application at http://localhost:3000.
+- You can see the application at [http://localhost:3000](http://localhost:3000).
 
-- [Follow the tutorial](/)
+- [Follow the tutorial](https://betterstack.com/community/guides/scaling-nodejs/artillery-intro/)
   to learn more.
 
 ## ⚖ License
