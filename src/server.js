@@ -1,20 +1,20 @@
-import "dotenv/config";
-import Fastify from "fastify";
-import pug from "pug";
-import fastifyView from "@fastify/view";
-import fastifyFormbody from "@fastify/formbody";
-import ajvErrors from "ajv-errors";
-import fastifyCookie from "@fastify/cookie";
-import fastifyStatic from "@fastify/static";
-import { faker } from "@faker-js/faker";
-import path from "node:path";
-import * as url from "node:url";
-import { loginSchema } from "./schema.js";
-import { UserManager } from "./user.js";
-import { port, appURL } from "./config.js";
+import 'dotenv/config';
+import Fastify from 'fastify';
+import pug from 'pug';
+import fastifyView from '@fastify/view';
+import fastifyFormbody from '@fastify/formbody';
+import ajvErrors from 'ajv-errors';
+import fastifyCookie from '@fastify/cookie';
+import fastifyStatic from '@fastify/static';
+import { faker } from '@faker-js/faker';
+import path from 'node:path';
+import * as url from 'node:url';
+import { loginSchema } from './schema.js';
+import { UserManager } from './user.js';
+import { port, appURL } from './config.js';
 
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
-const views = path.join(__dirname, "templates");
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const views = path.join(__dirname, 'templates');
 
 const fastify = Fastify({
   logger: true,
@@ -30,7 +30,7 @@ const fastify = Fastify({
 });
 
 fastify.register(fastifyCookie, {
-  hook: "onRequest",
+  hook: 'onRequest',
 });
 
 fastify.register(fastifyView, {
@@ -40,33 +40,33 @@ fastify.register(fastifyView, {
 });
 
 fastify.register(fastifyStatic, {
-  root: path.join(__dirname, "public/"),
+  root: path.join(__dirname, 'public/'),
 });
 
 fastify.register(fastifyFormbody);
 
-fastify.get("/dashboard", (req, reply) => {
+fastify.get('/dashboard', (req, reply) => {
   const signedIn = req.cookies.signedIn;
   if (!signedIn) {
-    return reply.redirect(303, "/login");
+    return reply.redirect(303, '/login');
   }
 
-  reply.view("./src/templates/dashboard.pug", {
-    title: "Dashboard",
+  reply.view('./src/templates/dashboard.pug', {
+    title: 'Dashboard',
   });
 });
 
-fastify.get("/login", (req, reply) => {
+fastify.get('/login', (req, reply) => {
   const signedIn = req.cookies.signedIn;
   if (signedIn) {
-    return reply.redirect(303, "/dashboard");
+    return reply.redirect(303, '/dashboard');
   }
 
-  reply.view("./src/templates/login.pug", { title: "Log in" });
+  reply.view('./src/templates/login.pug', { title: 'Log in' });
 });
 
 fastify.post(
-  "/login",
+  '/login',
   {
     schema: {
       body: loginSchema,
@@ -78,7 +78,7 @@ fastify.post(
     if (req.validationError) {
       const error = req.validationError;
       const data = {
-        title: "Login in",
+        title: 'Login in',
         errors: error.validation.map((err) => {
           return {
             key: err.instancePath.substring(1),
@@ -87,57 +87,55 @@ fastify.post(
         }),
       };
 
-      return reply.status(400).view("./src/templates/login.pug", data);
+      return reply.status(400).view('./src/templates/login.pug', data);
     }
 
     reply
-      .setCookie("signedIn", "true", {
+      .setCookie('signedIn', 'true', {
         domain: appURL.hostname,
-        path: "/",
+        path: '/',
         maxAge: 3600,
       })
-      .redirect(303, "/dashboard");
+      .redirect(303, '/dashboard');
   }
 );
 
-fastify.get("/logout", (req, reply) => {
+fastify.get('/logout', (req, reply) => {
   reply
-    .clearCookie("signedIn", {
+    .clearCookie('signedIn', {
       domain: appURL.hostname,
-      path: "/",
+      path: '/',
     })
-    .redirect(303, "/login");
+    .redirect(303, '/login');
 });
 
-fastify.get("/api/data", (req, reply) => {
-  const contentTypeHeader = req.headers["content-type"];
+fastify.get('/api/data', (req, reply) => {
+  const acceptHeader = req.headers['accept'];
 
-  if (contentTypeHeader && contentTypeHeader.includes("application/json")) {
+  if (acceptHeader && acceptHeader.includes('application/json')) {
     // Sample JSON response
     const jsonData = {
-      message: "This is a JSON response",
+      message: 'This is a JSON response',
       data: {
         email: faker.internet.email(),
-        password: faker.internet.password(),
       },
     };
     reply.send(jsonData);
   } else {
     // Render Pug template
     const pugData = {
-      title: "Rendered Data",
-      message: "This is an HTML response",
+      title: 'Rendered Data',
+      message: 'This is an HTML response',
       data: {
         email: faker.internet.email(),
-        password: faker.internet.password(),
       },
     };
-    reply.view("./src/templates/api-data.pug", pugData);
+    reply.view('./src/templates/api-data.pug', pugData);
   }
 });
 
-fastify.get("/", (req, reply) => {
-  reply.view("./src/templates/index.pug", { title: "Welcome" });
+fastify.get('/', (req, reply) => {
+  reply.view('./src/templates/index.pug', { title: 'Welcome' });
 });
 
 fastify.listen({ port }, function (err, address) {
